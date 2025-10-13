@@ -105,13 +105,10 @@
       status.textContent = "Fetching repositories...";
       try {
         const repos = await fetchAllRepos(user);
-        repos.sort((a, b) =>
-          (b.stargazers_count + b.forks_count + b.watchers_count) -
-          (a.stargazers_count + a.forks_count + a.watchers_count)
-        );
-
         const owned = getLanguageData(repos, false);
         const forked = getLanguageData(repos, true);
+        owned.data.sort((a, b) => b.value - a.value);
+        forked.data.sort((a, b) => b.value - a.value);
 
         // Owned
         if (owned.data.length) {
