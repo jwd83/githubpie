@@ -161,8 +161,28 @@
           const repos = await fetchAllRepos(user);
           const owned = getLanguageData(repos, false);
           const forked = getLanguageData(repos, true);
+
+
           owned.data.sort((a, b) => b.value - a.value);
           forked.data.sort((a, b) => b.value - a.value);
+
+
+
+          // add the count for "Other" to owned and forked to account for repos with no language set
+            const ownedOtherCount = repos.filter(
+                (r) => !r.fork && !r.language
+            ).length;
+            const forkedOtherCount = repos.filter(
+                (r) => r.fork && !r.language
+            ).length;
+
+            if (ownedOtherCount > 0) {
+                owned.data.push({ name: "Docs/Other", value: ownedOtherCount });
+            }
+            if (forkedOtherCount > 0) {
+                forked.data.push({ name: "Docs/Other", value: forkedOtherCount });
+            }
+
 
           // Owned
           if (owned.data.length) {
